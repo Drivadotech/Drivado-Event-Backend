@@ -23,6 +23,7 @@ const driverSchema = new mongoose.Schema({
         validate: [validator.isEmail, "please enter email in correct format"],
         trim: true,
         unique: [true, "email is  alraedy been used"],
+        required: [true, "email is  mandatory"],
       },
         password: {
         type: String,

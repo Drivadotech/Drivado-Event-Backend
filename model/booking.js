@@ -99,13 +99,7 @@ const BookingSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Passenger",
   },
-  affiliateDetails: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "affiliate",
-  },
-  affiliateNote: {
-    type: String,
-  },
+ 
   driverDetails: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Driver",
@@ -118,14 +112,7 @@ const BookingSchema = new mongoose.Schema({
     type: String,
     enum: ["COMPLETED", "CONFIRMED", "CANCELLED"],
   },
-  paymentStatus: {
-    type: String,
-    enum: ["PAID", "UNPAID"],
-  },
-  paymentType: {
-    type: String,
-    enum: ["BANK", "CARD"],
-  },
+ 
   remarks: {
     type: String,
   },
@@ -135,12 +122,7 @@ const BookingSchema = new mongoose.Schema({
     },
   },
 
-  afiliateAssignedAt: {
-    type: Date,
-  },
-  afiliateAssignedBy: {
-    type: String,
-  },
+
   isSearch: {
     type: Boolean,
     default: false,

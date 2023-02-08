@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const validator = require('validator')
+const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
@@ -65,9 +65,25 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "English",
     },
+    unpaidBooking: {
+      type: Number,
+      default: 0,
+    },
+    markup: {
+      type: Number,
+      default: 0,
+    },
+    discount: {
+      type: Number,
+      default: 0,
+    },
     permission: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "userPermission",
+    },
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "company",
     },
   },
   { timestamps: true }

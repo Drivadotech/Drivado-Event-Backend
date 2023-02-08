@@ -3,7 +3,7 @@ const CompanyModel = require("../model/company")
 const UserPermission = require("../model/userPermission");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-// const mailHelper = require("../utils/emailHelper");
+const mailHelper = require("../utils/emailHelper");
 const sgMail = require("@sendgrid/mail");
 const handlebars = require("handlebars");
 const fs = require("fs");
@@ -17,7 +17,7 @@ const createRefreshToken = (payload) => {
   });
 };
 //Creating Access Token
-exports.createAccessToken = (payload) => {
+const createAccessToken = (payload) => {
   return jwt.sign(payload, process.env.JWT_SECRET_ACCESS_TOKEN, {
     expiresIn: "10d",
   });
@@ -249,7 +249,7 @@ exports.getAccessToken = async (req, res) => {
         .send({ success: false, message: "Please login again" });
     }
 
-    const access_Token = this.createAccessToken({ _id: logInUser.id });
+    const access_Token = createAccessToken({ _id: logInUser.id });
 
     res.status(200).send({ success: true, accessToken: access_Token });
   } catch (error) {
@@ -392,4 +392,121 @@ exports.updatePasswordByAdmin = async (req, res) => {
   }
 };
 
+
+
+exports.getUserInformation = async (req, res) => {
+  try {
+    // console.log(req.user);
+    // console.log(req.user._id);
+
+    const userInformation = await UserModel.findById({
+      _id: req.user._id,
+    })
+      .select("-password")
+      .populate("permission")
+      .populate("company");
+
+    return res.status(200).send({
+      success: true,
+      message: "user details found",
+      data: userInformation,
+    });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+
+//Get all user Details
+exports.getAllUserInformation = async (req, res) => {
+  try {
+    const userInformation = await UserModel.find().select("-password");
+
+    res.status(200).send({
+      success: true,
+      message: "all user details found",
+      data: userInformation,
+    });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+
+
+//logot
+exports.logOut = async (req, res) => {
+  try {
+    const options = {
+      path: "/api/v1/user/refresh_Token",
+    };
+    res.clearCookie("refreshToken", options);
+    res.clearCookie("refreshToken");
+
+    return res
+      .status(200)
+      .send({ success: false, message: "logged out successfully" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+
+
+//Update User
+exports.updateUser = async (req, res) => {
+  try {
+    const updateUser = await UserModel.findOneAndUpdate(
+      { _id: req.query.id },
+      req.body
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "updated successfully",
+      data: updateUser,
+    });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+//update role
+exports.updateUserRole = async (req, res) => {
+  try {
+    const { role } = req.body;
+
+    const updateRole = await UserModel.findByIdAndUpdate(req.query.id, {
+      role: role.toUpperCase(),
+    });
+
+    res.status(200).send({
+      success: true,
+      message: "updated successfully",
+      data: updateRole,
+    });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+//Update Enable Or Disalble
+exports.updateuserActiveStatus = async (req, res) => {
+  try {
+    const { userActiveStatus } = req.body;
+
+    const updateuserActiveStatus = await UserModel.findOneAndUpdate(
+      { userName: req.query.userName },
+      { userActiveStatus: userActiveStatus.toUpperCase() }
+    );
+
+    res.status(200).send({
+      success: true,
+      message: "updated successfully",
+      data: updateuserActiveStatus,
+    });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
 
