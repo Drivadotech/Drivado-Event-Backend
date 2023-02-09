@@ -312,7 +312,7 @@ exports.updateDriver = async (req, res) => {
 exports.assignDriver = async (req,res)=>{
   try {
     const  driverId = req.query.driverId
-    const checkDriver = await BookingModel.findOne({_id:driverId})
+    const checkDriver = await DriverModel.findOne({_id:driverId})
     if(!checkDriver){
       res.status(401).send({success:false,message:"driver not found"})
     }

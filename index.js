@@ -69,6 +69,6 @@ app.use("/api/v1/company", require("./routes/company"));
 app.use("/api/v1/driver", require("./routes/driver"));
 app.use("/api/v1/vehicles", require("./routes/vehicle"));
 app.use("/api/v1/permission", require("./routes/userPermission"));
-// app.use("/api/v1/bookings", require("./routes/booking"));
+app.use("/api/v1/bookings", require("./routes/booking"));
 // app.use("/api/v1/passengers", require("./routes/passenger"));
 app.use("/api/v1/place", require("./routes/places"));

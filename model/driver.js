@@ -50,10 +50,6 @@ const driverSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
       },
-        language: {
-        type: String,
-        default: "English",
-      },
       companyId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "company",

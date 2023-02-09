@@ -134,6 +134,6 @@ exports.updateVehicle = async (req, res) => {
     res.status(200).send(updatedVehicle);
 
   } catch (error) {
-    
+     
   }
 }
