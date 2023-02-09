@@ -151,6 +151,9 @@ const BookingSchema = new mongoose.Schema({
   invoice_code_num: {
     type: String,
   },
+  driverStatus:{
+    type:Object
+  },
   history: [
     {
       type: mongoose.Schema.Types.ObjectId,

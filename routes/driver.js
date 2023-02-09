@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerDriver, driverLogin, updatePasswordOfDriverByUser, getDriverInformation, getAllDriverInformation, forgotPassword, resetPassword, assignDriver } = require("../controller/driverController");
+const { registerDriver, driverLogin, updatePasswordOfDriverByUser, getDriverInformation, getAllDriverInformation, forgotPassword, resetPassword, assignDriver, updateDriverStatus, getPastBooking, assignBooking } = require("../controller/driverController");
 const router = express.Router();
 const driverAuth = require("../middlewares/driverAuth");
 const auth = require("../middlewares/auth");
@@ -15,5 +15,9 @@ router.route("/getAllDriverInformation").get( auth,admin,getAllDriverInformation
 router.route("/forgotPassword").post(forgotPassword);
 router.route("/resetPassword").post(driverAuth, resetPassword);
 router.route("/assignDriver").post(auth,admin, assignDriver);
+router.route("/updateDriverStatus").patch(driverAuth, updateDriverStatus);
+router.route("/assignedBooking").get(driverAuth, assignBooking);
+router.route("/getPastBooking").get(driverAuth, getPastBooking);
+
 
 module.exports = router;

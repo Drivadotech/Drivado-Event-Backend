@@ -3,7 +3,8 @@ const CompanyModel = require("../model/company");
 const bcrypt = require("bcrypt");
 const mailHelper = require("../utils/emailHelper");
 const jwt = require("jsonwebtoken");
-const BookingModel = require("../model/booking")
+const BookingModel = require("../model/booking");
+const booking = require("../model/booking");
 
 //creating Refresh Token
 const createRefreshToken = (payload) => {
@@ -50,12 +51,10 @@ exports.registerDriver = async (req, res) => {
     const DriverDetail = await DriverModel.findOne({ mobile: mobile });
 
     if (DriverDetail) {
-      return res
-        .status(401)
-        .send({
-          success: false,
-          message: "Driver With this mobile number already exists",
-        });
+      return res.status(401).send({
+        success: false,
+        message: "Driver With this mobile number already exists",
+      });
     }
     //hashing of password
     const hashPassword = await bcrypt.hash(password, 10);
@@ -153,11 +152,13 @@ exports.updatePasswordOfDriverByUser = async (req, res) => {
     console.log("user->", req.user);
 
     const { password } = req.body;
-    const driverId =req.query.driverId
+    const driverId = req.query.driverId;
 
-    const checkDriverPresent = await DriverModel.findOne({_id:driverId})
-    if(!checkDriverPresent){
-      return res.status(401).send({success:false,message:"Driver With this id not found"})
+    const checkDriverPresent = await DriverModel.findOne({ _id: driverId });
+    if (!checkDriverPresent) {
+      return res
+        .status(401)
+        .send({ success: false, message: "Driver With this id not found" });
     }
 
     const driverToChange = await DriverModel.findOne({
@@ -190,8 +191,6 @@ exports.updatePasswordOfDriverByUser = async (req, res) => {
   }
 };
 
-
-
 //get user details of a specific user
 exports.getDriverInformation = async (req, res) => {
   try {
@@ -199,8 +198,7 @@ exports.getDriverInformation = async (req, res) => {
       _id: req.driver._id,
     })
       .select("-password")
-      .populate("companyId")
-  
+      .populate("companyId");
 
     return res.status(200).send({
       success: true,
@@ -211,7 +209,6 @@ exports.getDriverInformation = async (req, res) => {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
-
 
 //Get all Driver Details
 exports.getAllDriverInformation = async (req, res) => {
@@ -228,8 +225,6 @@ exports.getAllDriverInformation = async (req, res) => {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
-
-
 
 //Forget Password
 
@@ -267,7 +262,6 @@ exports.forgotPassword = async (req, res) => {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
-
 
 exports.resetPassword = async (req, res) => {
   try {
@@ -308,19 +302,86 @@ exports.updateDriver = async (req, res) => {
   }
 };
 
-
-exports.assignDriver = async (req,res)=>{
+exports.assignDriver = async (req, res) => {
   try {
-    const  driverId = req.query.driverId
-    const checkDriver = await DriverModel.findOne({_id:driverId})
-    if(!checkDriver){
-      res.status(401).send({success:false,message:"driver not found"})
+    const driverId = req.query.driverId;
+    const checkDriver = await DriverModel.findOne({ _id: driverId });
+    if (!checkDriver) {
+      return res.status(401).send({ success: false, message: "driver not found" });
     }
-    const updateBooking = await BookingModel.findByIdAndUpdate({_id:req.query.bookingId},{
-      $push:{driverDetails:driverId}
-    })
-    res.status(201).send({success:true,message:"Driver Assigned Successfully",data:updateBooking})
+    const updateBooking = await BookingModel.findByIdAndUpdate(
+      { _id: req.query.bookingId },
+      {
+        // $push: { driverDetails: driverId },
+        driverDetails:driverId
+      }
+    );
+    res
+      .status(201)
+      .send({
+        success: true,
+        message: "Driver Assigned Successfully",
+        data: updateBooking,
+      });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
 
+//Update Driver Status
+
+exports.updateDriverStatus = async (req, res) => {
+  try {
+    const driverActiveStatus = req.query.driverActiveStatus;
+    console.log("----------------->", req.driver);
+    const updateDriverStatus = await DriverModel.findByIdAndUpdate(
+      { _id: req.driver._id },
+      { driverActiveStatus: driverActiveStatus }
+    );
+    res
+      .status(201)
+      .send({
+        success: true,
+        message: "status updated successfully",
+        data: updateDriverStatus,
+      });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+
+//assign booking 
+//past bookings
+//upcomming booking
+//in progress
+
+//Assign Booking
+exports.assignedBooking = async(req,res)=>{
+try {
+  console.log(req.driver);
+  const getAllBooking = await booking.find()
+  // console.log(getAllBooking);
+
+  const findBookingOfParticualarData = await booking.find({driverDetails:req.driver._id})
+  console.log(findBookingOfParticualarData);
+  return res.status(500).send({ success: false, message:"" ,data:findBookingOfParticualarData });
+  
+} catch (error) {
+  return res.status(500).send({ success: false, message: error.message });
+}
+}
+
+
+
+
+
+//PAST BOOKING
+exports.getPastBooking = async(req,res)=>{
+  try {
+    console.log(req.driver);
+
+    
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }

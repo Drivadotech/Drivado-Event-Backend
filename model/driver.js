@@ -36,24 +36,35 @@ const driverSchema = new mongoose.Schema({
         driverLicenseNumber: {
         type: String,
       },
-        driverActiveStatus: {
-        type: String,
-        enum: ["ENABLE", "DISABLE"],
-        default: "ENABLE",
-      },
+      //   driverActiveStatus: {
+      //   type: String,
+      //   enum: ["ACTIVE", "INACTIVE"],
+      //   default: "ACTIVE",
+      // },
         loginAttempts: {
         type: Number,
         default: 0,
         max: 5,
       },
-        driverLocked: {
+      driverActiveStatus: {
         type: Boolean,
-        default: false,
+        default: true,
+      },
+      carType:{
+        type:String,
+      },
+      countryCode:{
+        type:String,
+        required:true
       },
       companyId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "company",
-      }
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
       
 
 })

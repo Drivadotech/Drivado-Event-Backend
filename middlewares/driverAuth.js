@@ -16,8 +16,8 @@ const auth = (req, res, next) => {
     //     .send({ sucess: false, message: "Invalid Authentication" });
     // }
     jwt.verify(token, process.env.JWT_SECRET_ACCESS_TOKEN, (err, driver) => {
-      // console.log(user);
-      // console.log(err);
+      console.log(driver);
+      console.log(err);
       if (err) {
         return res
           .status(400)
