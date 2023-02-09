@@ -1,13 +1,4 @@
 const mongoose = require("mongoose");
-// const moment= require('moment') 
-
-// const { default: ShortUniqueId } = require("short-unique-id");
-// const uid = new ShortUniqueId({ length: 5 });
-// const today = moment().format("YYYY-MM-DD");
-
-// const bookingId = `D${today.split("-")[1]}${today
-//   .split("-")[0]
-//   .slice(-2)}-${uid().toUpperCase()}`;
 
 const BookingSchema = new mongoose.Schema({
   source: {
@@ -112,7 +103,7 @@ const BookingSchema = new mongoose.Schema({
  
   driverDetails: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Driver",
+    ref: "driver",
   },
   vehicleDetails: {
     type: mongoose.Schema.Types.ObjectId,

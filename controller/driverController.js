@@ -307,22 +307,22 @@ exports.assignDriver = async (req, res) => {
     const driverId = req.query.driverId;
     const checkDriver = await DriverModel.findOne({ _id: driverId });
     if (!checkDriver) {
-      return res.status(401).send({ success: false, message: "driver not found" });
+      return res
+        .status(401)
+        .send({ success: false, message: "driver not found" });
     }
     const updateBooking = await BookingModel.findByIdAndUpdate(
       { _id: req.query.bookingId },
       {
         // $push: { driverDetails: driverId },
-        driverDetails:driverId
+        driverDetails: driverId,
       }
     );
-    res
-      .status(201)
-      .send({
-        success: true,
-        message: "Driver Assigned Successfully",
-        data: updateBooking,
-      });
+    res.status(201).send({
+      success: true,
+      message: "Driver Assigned Successfully",
+      data: updateBooking,
+    });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
@@ -338,51 +338,89 @@ exports.updateDriverStatus = async (req, res) => {
       { _id: req.driver._id },
       { driverActiveStatus: driverActiveStatus }
     );
-    res
-      .status(201)
+    res.status(201).send({
+      success: true,
+      message: "status updated successfully",
+      data: updateDriverStatus,
+    });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+//assign booking
+//past bookings
+//upcomming booking
+//in progress
+
+//Assign Booking
+exports.assignedBooking = async (req, res) => {
+  try {
+    console.log(req.driver);
+    const findBookingOfParticualarData = await booking.find({
+      driverDetails: req.driver._id,
+    });
+    console.log(findBookingOfParticualarData);
+    return res
+      .status(500)
       .send({
-        success: true,
-        message: "status updated successfully",
-        data: updateDriverStatus,
+        success: false,
+        message: "",
+        data: findBookingOfParticualarData,
       });
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
 };
 
-
-//assign booking 
-//past bookings
-//upcomming booking
-//in progress
-
-//Assign Booking
-exports.assignedBooking = async(req,res)=>{
-try {
-  console.log(req.driver);
-  const getAllBooking = await booking.find()
-  // console.log(getAllBooking);
-
-  const findBookingOfParticualarData = await booking.find({driverDetails:req.driver._id})
-  console.log(findBookingOfParticualarData);
-  return res.status(500).send({ success: false, message:"" ,data:findBookingOfParticualarData });
-  
-} catch (error) {
-  return res.status(500).send({ success: false, message: error.message });
-}
-}
-
-
-
-
-
-//PAST BOOKING
-exports.getPastBooking = async(req,res)=>{
+//Today BOOKING
+exports.getPresentBooking = async (req, res) => {
   try {
     console.log(req.driver);
+    // console.log(new Date().toISOString().slice(0, 10));
 
-    
+    const findPresentBooking = await booking.find({
+      driverDetails: req.driver._id,
+      travelDate: new Date().toISOString().slice(0, 10),
+    });
+    // console.log(findPresentBooking);
+
+    res.status(201).send({success:true,message:"Booking found",data:findPresentBooking})
+
   } catch (error) {
     return res.status(500).send({ success: false, message: error.message });
   }
-}
+};
+
+//PAST BOOKING
+exports.getPastBooking = async (req, res) => {
+  try {
+    console.log(req.driver);
+    const getPastBooking = await booking.find({
+      driverDetails: req.driver._id,
+      travelDate: { $lt: new Date().toISOString().slice(0, 10) },
+    });
+    // console.log(getPastBooking);
+    res.status(201).send({success:true,message:"Booking found",data:getPastBooking})
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+//Future BOOKING
+exports.getFutureBooking = async (req, res) => {
+  try {
+    console.log(req.driver);
+    const getFutureBooking = await booking.find({
+      driverDetails: req.driver._id,
+      travelDate: { $gt: new Date().toISOString().slice(0, 10) },
+    });
+    res.status(201).send({success:true,message:"Booking found",data:getFutureBooking})
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+
+
+
