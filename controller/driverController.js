@@ -314,7 +314,6 @@ exports.assignDriver = async (req, res) => {
     const updateBooking = await BookingModel.findByIdAndUpdate(
       { _id: req.query.bookingId },
       {
-        // $push: { driverDetails: driverId },
         driverDetails: driverId,
       }
     );
@@ -348,12 +347,8 @@ exports.updateDriverStatus = async (req, res) => {
   }
 };
 
-//assign booking
-//past bookings
-//upcomming booking
-//in progress
 
-//Assign Booking
+//Assign Booking     all bookings
 exports.assignedBooking = async (req, res) => {
   try {
     console.log(req.driver);
@@ -373,7 +368,7 @@ exports.assignedBooking = async (req, res) => {
   }
 };
 
-//Today BOOKING
+//Today BOOKING inprogress
 exports.getPresentBooking = async (req, res) => {
   try {
     console.log(req.driver);
@@ -392,7 +387,7 @@ exports.getPresentBooking = async (req, res) => {
   }
 };
 
-//PAST BOOKING
+//PAST BOOKING   
 exports.getPastBooking = async (req, res) => {
   try {
     console.log(req.driver);
@@ -407,7 +402,7 @@ exports.getPastBooking = async (req, res) => {
   }
 };
 
-//Future BOOKING
+//Future BOOKING   upcoming
 exports.getFutureBooking = async (req, res) => {
   try {
     console.log(req.driver);
